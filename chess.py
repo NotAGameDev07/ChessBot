@@ -29,7 +29,7 @@ class Chessboard:
 		#checks if piece exists in the move to position
 		exists = (self.board[pos1[1]][pos1[0]] != self.empty)
 		#checks if piece can move
-		if self.board[pos0[1]][pos0[0]].moveset(pos0, pos1, exists, not self.is_path_clear(pos0, pos1)):
+		if self.board[pos0[1]][pos0[0]].moveset(pos0, pos1, exists, not self.is_path_clear(pos0, pos1), self.board[pos0[1]][pos0[0]], self.board[pos1[1]][pos1[0]]):
 			self.board[pos1[1]][pos1[0]] = self.board[pos0[1]][pos0[0]]
 			self.board[pos0[1]][pos0[0]] = self.empty
 	def is_path_clear(self, from_pos, to_pos):
@@ -66,17 +66,20 @@ class Chessboard:
 class Emptypiece:
 	def __init__(self):
 		self.exists = False
+		self.team = None
 	def __repr__(self):
 		return "_"
 	def __str__(self):
 		return "empty"
 
 class Chesspiece(Emptypiece):
-	def __init__(self, name, symbol, moveset=None):
+	def __init__(self, name, symbol, moveset=None, team=None):
 		super().__init__()
 		self.exists = True
 		self.name = name
 		self.symbol = symbol
+		if team is not None:
+			self.team = team
 		if moveset is not None:
 			self.moveset = moveset
 		else:
@@ -85,7 +88,10 @@ class Chesspiece(Emptypiece):
 	def __repr__(self):
 		return self.symbol
 	#moving logic
-	def _moveset(self, frompos, topos, pieceExists, blocks):
+	def _moveset(self, frompos, topos, pieceExists, blocks, p0, p1):
+		Team_question_mark = ((p0.team is None) and (p1.team is None)) or ((p0.team is not None) and (p1.team is None))
+		if not Team_question_mark:
+			return True
 		if blocks == True:
 			return False
 		if (topos[1] >= frompos[1]):
@@ -99,10 +105,10 @@ class Chesspiece(Emptypiece):
 	
 
 board = Chessboard(8)
-board[4, 5] = Chesspiece("Pawn", 'p')
-board[6, 7] = Chesspiece("Queen", 'Q', movesets.queen_moveset)
+board[4, 5] = Chesspiece("Pawn", 'p', team=10)
+board[6, 7] = Chesspiece("Queen", 'Q', movesets.queen_moveset, team=1)
 print(repr(board))
 board.move([4, 5], [4, 4])
 board.move([6, 7], [6, 6])
-board.move([6, 6], [3, 3])
+board.move([6, 6], [4, 4])
 print(repr(board))
