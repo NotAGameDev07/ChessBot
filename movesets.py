@@ -1,6 +1,6 @@
 def queen_moveset(frompos, topos, pieceExists, blocks, p0, p1):
-	Team_question_mark = ((p0.team is None) and (p1.team is None)) or ((p0.team is not None) and (p1.team is None))
-	if not Team_question_mark:
+	Team_question_mark = ((p0.team == p1.team) and ((p0 != None) and (p1 != None)))
+	if Team_question_mark:
 		return False
 	if blocks == True:
 		return False

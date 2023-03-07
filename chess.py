@@ -67,6 +67,8 @@ class Emptypiece:
 	def __init__(self):
 		self.exists = False
 		self.team = None
+	def moveset(self, *args):
+		return False
 	def __repr__(self):
 		return "_"
 	def __str__(self):
@@ -102,7 +104,9 @@ class Chesspiece(Emptypiece):
 			return True
 		return False
 		
-	
+
+def ChessTranslator(stri):
+	return [list(map(int, i.split(','))) for i in stri.split('-')]
 
 board = Chessboard(8)
 board[4, 5] = Chesspiece("Pawn", 'p', team=10)
@@ -110,5 +114,6 @@ board[6, 7] = Chesspiece("Queen", 'Q', movesets.queen_moveset, team=1)
 print(repr(board))
 board.move([4, 5], [4, 4])
 board.move([6, 7], [6, 6])
-board.move([6, 6], [4, 4])
+board.move(*ChessTranslator("6,6-4,4"))
+#board.move([6, 6], [4, 4])
 print(repr(board))
